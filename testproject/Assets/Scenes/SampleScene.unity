@@ -831,7 +831,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_ProtocolType: 1
-  m_MessageBufferSize: 100
+  m_MessageBufferSize: 1024
   m_ServerAddress: 127.0.0.1
   m_ServerPort: 7777
   m_RelayMaxPlayers: 10
