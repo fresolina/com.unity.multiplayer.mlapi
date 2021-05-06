@@ -1260,7 +1260,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &767273508
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2049,6 +2049,7 @@ RectTransform:
   m_Children:
   - {fileID: 8433286918724971109}
   - {fileID: 636083587}
+  - {fileID: 2012651753}
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -2071,6 +2072,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NetworkManager: {fileID: 620561611}
   ButtonsRoot: {fileID: 5305830272511016535}
+  AuthButton: {fileID: 2012651752}
+  JoinCode: {fileID: 636083586}
+  Transport: {fileID: 620561613}
 --- !u!1 &1398767341
 GameObject:
   m_ObjectHideFlags: 0
@@ -2835,8 +2839,8 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1580236831}
-  m_Father: {fileID: 8433286918724971109}
-  m_RootOrder: 3
+  m_Father: {fileID: 1333567166}
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -3063,7 +3067,6 @@ RectTransform:
   - {fileID: 851787406}
   - {fileID: 228168483}
   - {fileID: 767273508}
-  - {fileID: 2012651753}
   m_Father: {fileID: 1333567166}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
