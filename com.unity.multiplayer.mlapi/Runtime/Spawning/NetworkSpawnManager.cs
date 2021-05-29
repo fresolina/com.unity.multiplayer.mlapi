@@ -532,7 +532,7 @@ namespace MLAPI.Spawning
         {
             foreach (var sobj in SpawnedObjectsList)
             {
-                if ((sobj.IsSceneObject != null && sobj.IsSceneObject == true) || sobj.DestroyWithScene)
+                if (sobj.DestroyWithScene)
                 {
                     sobj.IsSpawned = false;
                     sobj.DestroyWithScene = false;
@@ -552,7 +552,7 @@ namespace MLAPI.Spawning
             var spawnedObjects = SpawnedObjectsList.ToList();
             foreach (var sobj in spawnedObjects)
             {
-                if ((sobj.IsSceneObject != null && sobj.IsSceneObject == true) || sobj.DestroyWithScene)
+                if (sobj.DestroyWithScene)
                 {
                     if (CustomDestroyHandlers.ContainsKey(sobj.PrefabHash))
                     {
