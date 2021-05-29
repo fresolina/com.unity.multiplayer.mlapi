@@ -92,7 +92,7 @@ namespace MLAPI.Transports
 #pragma warning restore IDE1006 // restore naming rule violation check
         {
             new TransportChannel(NetworkChannel.Internal, NetworkDelivery.ReliableFragmentedSequenced),
-            new TransportChannel(NetworkChannel.ReliableRpc, NetworkDelivery.ReliableSequenced),
+            new TransportChannel(NetworkChannel.ReliableRpc, NetworkDelivery.ReliableFragmentedSequenced),
             new TransportChannel(NetworkChannel.UnreliableRpc, NetworkDelivery.UnreliableSequenced),
             new TransportChannel(NetworkChannel.TimeSync, NetworkDelivery.Unreliable),
             new TransportChannel(NetworkChannel.SyncChannel, NetworkDelivery.Unreliable),
