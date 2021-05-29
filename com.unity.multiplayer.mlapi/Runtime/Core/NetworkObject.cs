@@ -177,7 +177,7 @@ namespace MLAPI
         /// If false, the objects ownership will be given to the server.
         /// </summary>
         public bool DontDestroyWithOwner;
-        public bool DontDestroyOnLoad {get; set;}
+        public bool IsDontDestroyOnLoad {get; set;}
 
         internal readonly HashSet<ulong> Observers = new HashSet<ulong>();
 

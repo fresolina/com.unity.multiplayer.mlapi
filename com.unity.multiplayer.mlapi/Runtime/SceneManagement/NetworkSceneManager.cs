@@ -424,8 +424,8 @@ namespace MLAPI.SceneManagement
             foreach (var sobj in objectsToKeep)
             {
                 // Don't touch  objects already in "DontDestroyOnLoad"
-                if (sobj.DontDestroyOnLoad || sobj.gameObject.scene.name == "DontDestroyOnLoad") {
-                    sobj.DontDestroyOnLoad = true;
+                if (sobj.IsDontDestroyOnLoad || sobj.gameObject.scene.name == "DontDestroyOnLoad") {
+                    sobj.IsDontDestroyOnLoad = true;
                     continue;
                 }
 
@@ -447,7 +447,7 @@ namespace MLAPI.SceneManagement
             foreach (var sobj in objectsToKeep)
             {
                 // Don't touch  objects already in "DontDestroyOnLoad"
-                if (sobj.DontDestroyOnLoad) continue;
+                if (sobj.IsDontDestroyOnLoad) continue;
 
                 //In case an object has been set as a child of another object it has to be unchilded in order to be moved from one scene to another.
                 if (sobj.gameObject.transform.parent != null)
