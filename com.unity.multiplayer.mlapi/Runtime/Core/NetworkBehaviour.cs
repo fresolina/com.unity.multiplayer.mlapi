@@ -42,11 +42,6 @@ namespace MLAPI
             Client = 2
         }
 
-        // todo: transitional. For the next release, only Snapshot should remain
-        // The booleans allow iterative development and testing in the meantime
-        static private bool s_UseClassicDelta = true;
-        static private bool s_UseSnapshot = false;
-
 #pragma warning disable 414
 #pragma warning disable IDE1006 // disable naming rule violation check
         [NonSerialized]
@@ -300,9 +295,9 @@ namespace MLAPI
                     m_NetworkObject = GetComponentInParent<NetworkObject>();
                 }
 
-                if (m_NetworkObject == null)
+                if (m_NetworkObject == null && NetworkLog.CurrentLogLevel <= LogLevel.Normal)
                 {
-                    throw new NullReferenceException($"Could not get {nameof(NetworkObject)} for the {nameof(NetworkBehaviour)}. Are you missing a {nameof(NetworkObject)} component?");
+                    NetworkLog.LogWarning($"Could not get {nameof(NetworkObject)} for the {nameof(NetworkBehaviour)}. Are you missing a {nameof(NetworkObject)} component?");
                 }
 
                 return m_NetworkObject;
@@ -312,18 +307,7 @@ namespace MLAPI
         /// <summary>
         /// Gets whether or not this NetworkBehaviour instance has a NetworkObject owner.
         /// </summary>
-        public bool HasNetworkObject
-        {
-            get
-            {
-                if (m_NetworkObject == null)
-                {
-                    m_NetworkObject = GetComponentInParent<NetworkObject>();
-                }
-
-                return m_NetworkObject != null;
-            }
-        }
+        public bool HasNetworkObject => NetworkObject != null;
 
         private NetworkObject m_NetworkObject = null;
 
@@ -604,7 +588,7 @@ namespace MLAPI
                 return;
             }
 
-            if (s_UseSnapshot)
+            if (NetworkManager.UseSnapshot)
             {
                 for (int k = 0; k < NetworkVariableFields.Count; k++)
                 {
@@ -612,7 +596,7 @@ namespace MLAPI
                 }
             }
 
-            if (s_UseClassicDelta)
+            if (NetworkManager.UseClassicDelta)
             {
                 for (int j = 0; j < m_ChannelMappedNetworkVariableIndexes.Count; j++)
                 {
@@ -622,10 +606,6 @@ namespace MLAPI
                         {
                             writer.WriteUInt64Packed(NetworkObjectId);
                             writer.WriteUInt16Packed(NetworkObject.GetNetworkBehaviourOrderIndex(this));
-
-                            // Write the current tick frame
-                            // todo: this is currently done per channel, per tick. The snapshot system might improve on this
-                            writer.WriteUInt16Packed(CurrentTick);
 
                             bool writtenAny = false;
                             for (int k = 0; k < NetworkVariableFields.Count; k++)
@@ -669,10 +649,6 @@ namespace MLAPI
                                 if (shouldWrite)
                                 {
                                     writtenAny = true;
-
-                                    // write the network tick at which this NetworkVariable was modified remotely
-                                    // this will allow lag-compensation
-                                    writer.WriteUInt16Packed(NetworkVariableFields[k].RemoteTick);
 
                                     if (NetworkManager.NetworkConfig.EnsureNetworkVariableLengthSafety)
                                     {
@@ -727,9 +703,6 @@ namespace MLAPI
         {
             using (var reader = PooledNetworkReader.Get(stream))
             {
-                // read the remote network tick at which this variable was written.
-                ushort remoteTick = reader.ReadUInt16Packed();
-
                 for (int i = 0; i < networkVariableList.Count; i++)
                 {
                     ushort varSize = 0;
@@ -782,13 +755,9 @@ namespace MLAPI
                         return;
                     }
 
-                    // read the local network tick at which this variable was written.
-                    // if this var was updated from our machine, this local tick will be locally valid
-                    ushort localTick = reader.ReadUInt16Packed();
-
                     long readStartPos = stream.Position;
 
-                    networkVariableList[i].ReadDelta(stream, networkManager.IsServer, localTick, remoteTick);
+                    networkVariableList[i].ReadDelta(stream, networkManager.IsServer);
                     PerformanceDataManager.Increment(ProfilerConstants.NetworkVarDeltas);
 
                     ProfilerStatManager.NetworkVarsRcvd.Record();
@@ -875,7 +844,7 @@ namespace MLAPI
 
                     long readStartPos = stream.Position;
 
-                    networkVariableList[i].ReadField(stream, NetworkTickSystem.NoTick, NetworkTickSystem.NoTick);
+                    networkVariableList[i].ReadField(stream);
                     PerformanceDataManager.Increment(ProfilerConstants.NetworkVarUpdates);
 
                     ProfilerStatManager.NetworkVarsRcvd.Record();
@@ -990,7 +959,7 @@ namespace MLAPI
 
                     long readStartPos = stream.Position;
 
-                    networkVariableList[j].ReadField(stream, NetworkTickSystem.NoTick, NetworkTickSystem.NoTick);
+                    networkVariableList[j].ReadField(stream);
 
                     if (networkManager.NetworkConfig.EnsureNetworkVariableLengthSafety)
                     {
