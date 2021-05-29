@@ -456,7 +456,7 @@ namespace MLAPI.Spawning
         {
             foreach (var sobj in SpawnedObjectsList)
             {
-                if ((sobj.IsSceneObject != null && sobj.IsSceneObject == true) || sobj.DestroyWithScene)
+                if (sobj.DestroyWithScene)
                 {
                     sobj.IsSpawned = false;
                     sobj.DestroyWithScene = false;
@@ -477,7 +477,7 @@ namespace MLAPI.Spawning
 
             foreach (var sobj in spawnedObjects)
             {
-                if ((sobj.IsSceneObject != null && sobj.IsSceneObject == true) || sobj.DestroyWithScene)
+                if (sobj.DestroyWithScene)
                 {
                     // This **needs** to be here until we overhaul NetworkSceneManager due to dependencies
                     // that occur shortly after NetworkSceneManager invokes ServerDestroySpawnedSceneObjects
