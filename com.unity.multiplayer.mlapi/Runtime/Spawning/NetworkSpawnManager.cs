@@ -354,7 +354,7 @@ namespace MLAPI.Spawning
             networkObject.IsSceneObject = sceneObject;
             networkObject.NetworkObjectId = networkId;
 
-            networkObject.DestroyWithScene = sceneObject || destroyWithScene;
+            networkObject.DestroyWithScene = !networkObject.IsDontDestroyOnLoad && (sceneObject || destroyWithScene);
 
             networkObject.OwnerClientIdInternal = ownerClientId;
             networkObject.IsPlayerObject = playerObject;
